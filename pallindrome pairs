@@ -1,0 +1,34 @@
+class Solution(object):
+    def palindromePairs(self, words):
+        """
+        :type words: List[str]
+        :rtype: List[List[int]]
+        """
+        word_map = {word: i for i, word in enumerate(words)}
+        result = []
+
+        def is_palindrome(s):
+            return s == s[::-1]
+
+        for i, word in enumerate(words):
+            n = len(word)
+
+            for j in range(n + 1):
+                left = word[:j]
+                right = word[j:]
+
+                # If left part is palindrome,
+                # reverse(right) can come before word
+                if is_palindrome(left):
+                    rev = right[::-1]
+                    if rev in word_map and word_map[rev] != i:
+                        result.append([word_map[rev], i])
+
+                # If right part is palindrome,
+                # reverse(left) can come after word
+                if j != n and is_palindrome(right):
+                    rev = left[::-1]
+                    if rev in word_map and word_map[rev] != i:
+                        result.append([i, word_map[rev]])
+
+        return result
